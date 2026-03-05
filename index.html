@@ -1768,6 +1768,11 @@
           <textarea class="apply-field-textarea tall" id="applyAbout" placeholder="Кто ты как человек? Характер, ценности, чем живёшь..."></textarea>
         </div>
 
+        <div class="apply-field-group">
+          <div class="apply-field-label">Ваш Discord</div>
+          <input class="apply-field-input" id="applyDiscord" type="text" placeholder="Например: username#0000 или @username" autocomplete="off">
+        </div>
+
         <button class="apply-submit-btn" id="applySubmitBtn">
           <span>Отправить заявку</span>
           <span class="arrow">→</span>
@@ -2349,6 +2354,10 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 });
 
 // APPLY FORM
+// ⚠️ ВСТАВЬ СЮДА WEBHOOK URL СВОЕГО DISCORD КАНАЛА ЗАЯВОК:
+// Настройки канала → Интеграции → Webhooks → Создать → Скопировать URL
+const DISCORD_WEBHOOK_URL = 'https://discord.com/api/webhooks/1479252792592961536/SG4dB_Et--yp7Ey6CPwQF8GUJkr0m6YJA7Kv7mFwOgRedBGfPekF-UufWdTHQMuOzg5A';
+
 const applyBtn = document.getElementById('applySubmitBtn');
 if (applyBtn) {
   applyBtn.addEventListener('click', async () => {
@@ -2359,11 +2368,12 @@ if (applyBtn) {
     const positions = document.getElementById('applyPositions').value.trim();
     const why       = document.getElementById('applyWhy').value.trim();
     const about     = document.getElementById('applyAbout').value.trim();
+    const discord   = document.getElementById('applyDiscord').value.trim();
 
     const fields = [
       ['applyName', name], ['applyAge', age], ['applyCall', call],
       ['applyExp', exp], ['applyPositions', positions],
-      ['applyWhy', why], ['applyAbout', about]
+      ['applyWhy', why], ['applyAbout', about], ['applyDiscord', discord]
     ];
 
     let hasEmpty = false;
@@ -2372,7 +2382,7 @@ if (applyBtn) {
         hasEmpty = true;
         const el = document.getElementById(id);
         el.style.borderColor = 'rgba(180,60,60,0.6)';
-        setTimeout(() => { el.style.borderColor = ''; }, 1500);
+        setTimeout(() => { el.style.borderColor = ''; }, 1800);
       }
     });
     if (hasEmpty) return;
@@ -2382,15 +2392,40 @@ if (applyBtn) {
     btn.style.pointerEvents = 'none';
     btn.querySelector('span').textContent = 'Отправка...';
 
+    const cb = '```';
+    const payload = {
+      username: 'Forever Family \u00b7 \u0417\u0430\u044f\u0432\u043a\u0438',
+      embeds: [{
+        color: 0xc9a84c,
+        title: '\ud83d\udccb \u041d\u041e\u0412\u0410\u042f \u0417\u0410\u042f\u0412\u041a\u0410 \u0412 \u0421\u0415\u041c\u042c\u042e',
+        fields: [
+          { name: '\u2503 \u0418\u043c\u044f \u0424\u0430\u043c\u0438\u043b\u0438\u044f',       value: '`' + name      + '`', inline: true  },
+          { name: '\u2503 \u0412\u043e\u0437\u0440\u0430\u0441\u0442',            value: '`' + age       + '`', inline: true  },
+          { name: '\u2503 Discord',           value: '`' + discord   + '`', inline: true  },
+          { name: '\u2503 \u041e\u0431\u0437\u0432\u043e\u043d',      value: '`' + call      + '`', inline: true  },
+          { name: '\u2503 \u041e\u043f\u044b\u0442 \u0432 \u0438\u0433\u0440\u0435',        value: cb + '\n' + exp       + '\n' + cb, inline: false },
+          { name: '\u2503 \u0414\u043e\u043b\u0436\u043d\u043e\u0441\u0442\u0438',          value: cb + '\n' + positions + '\n' + cb, inline: false },
+          { name: '\u2503 \u041f\u043e\u0447\u0435\u043c\u0443 \u0445\u043e\u0442\u044f\u0442 \u043a \u043d\u0430\u043c', value: cb + '\n' + why       + '\n' + cb, inline: false },
+          { name: '\u2503 \u041e \u0441\u0435\u0431\u0435',             value: cb + '\n' + about     + '\n' + cb, inline: false }
+        ],
+        footer: { text: 'Forever Family \u00b7 \u0421\u0430\u0439\u0442 \u00b7 ' + new Date().toLocaleString('ru-RU') },
+        timestamp: new Date().toISOString()
+      }]
+    };
+
     try {
-      await fetch('http://localhost:3000/apply', {
+      const res = await fetch(DISCORD_WEBHOOK_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, age, call, experience: exp, positions, why, about })
+        body: JSON.stringify(payload)
       });
+      if (!res.ok) throw new Error('Webhook error ' + res.status);
     } catch(e) {
-      // Если бот не отвечает — всё равно показываем успех
-      console.warn('Bot unreachable:', e);
+      console.error('Webhook error:', e);
+      btn.style.opacity = '1';
+      btn.style.pointerEvents = '';
+      btn.querySelector('span').textContent = 'Ошибка — попробуй ещё раз';
+      return;
     }
 
     document.getElementById('applyForm').style.opacity = '0';
@@ -2398,8 +2433,7 @@ if (applyBtn) {
     document.getElementById('applyForm').style.transition = 'all 0.4s ease';
     setTimeout(() => {
       document.getElementById('applyForm').style.display = 'none';
-      const succ = document.getElementById('applySuccess');
-      succ.style.display = 'block';
+      document.getElementById('applySuccess').style.display = 'block';
     }, 400);
   });
 }
