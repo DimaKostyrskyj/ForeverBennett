@@ -1112,6 +1112,232 @@
     text-transform: uppercase; color: var(--gold);
   }
 
+  /* DISCORD CORNER BUTTON */
+  .discord-corner {
+    position: fixed;
+    bottom: 32px;
+    right: 32px;
+    z-index: 9000;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(10,10,10,0.92);
+    border: 1px solid rgba(201,168,76,0.25);
+    padding: 12px 20px;
+    text-decoration: none;
+    color: var(--white-dim);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    backdrop-filter: blur(20px);
+    transition: all 0.3s ease;
+    cursor: none;
+    overflow: hidden;
+  }
+  .discord-corner::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(201,168,76,0.08) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+  .discord-corner::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transform: scaleX(0);
+    transition: transform 0.4s ease;
+  }
+  .discord-corner:hover {
+    border-color: rgba(201,168,76,0.5);
+    color: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 32px rgba(201,168,76,0.1);
+  }
+  .discord-corner:hover::before { opacity: 1; }
+  .discord-corner:hover::after { transform: scaleX(1); }
+  .discord-corner svg {
+    width: 16px; height: 16px;
+    fill: var(--gold);
+    flex-shrink: 0;
+    opacity: 0.8;
+    transition: opacity 0.3s ease;
+  }
+  .discord-corner:hover svg { opacity: 1; }
+  .discord-corner-pulse {
+    position: absolute;
+    top: 10px; right: 10px;
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: discordPulse 2s ease-in-out infinite;
+  }
+  @keyframes discordPulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* APPLICATION FORM SECTION */
+  .apply-form-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+  }
+  .apply-intro {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    color: var(--white-dim);
+    line-height: 1.7;
+    margin-bottom: 56px;
+    padding-left: 24px;
+    border-left: 1px solid rgba(201,168,76,0.3);
+  }
+  .apply-field-group {
+    margin-bottom: 32px;
+    position: relative;
+  }
+  .apply-field-label {
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .apply-field-label::before {
+    content: '';
+    width: 16px; height: 1px;
+    background: var(--gold);
+    flex-shrink: 0;
+  }
+  .apply-field-input,
+  .apply-field-textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border-light);
+    border-bottom: 1px solid rgba(201,168,76,0.2);
+    color: var(--white);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 300;
+    padding: 14px 18px;
+    outline: none;
+    transition: all 0.3s ease;
+    resize: none;
+    -webkit-appearance: none;
+  }
+  .apply-field-input:focus,
+  .apply-field-textarea:focus {
+    border-color: rgba(201,168,76,0.5);
+    background: rgba(201,168,76,0.03);
+    box-shadow: 0 0 0 1px rgba(201,168,76,0.1);
+  }
+  .apply-field-input::placeholder,
+  .apply-field-textarea::placeholder {
+    color: rgba(245,240,232,0.2);
+    font-style: italic;
+  }
+  .apply-field-textarea { min-height: 120px; line-height: 1.7; }
+  .apply-field-textarea.tall { min-height: 160px; }
+  .apply-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .apply-divider {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin: 48px 0;
+  }
+  .apply-divider-line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-light));
+  }
+  .apply-divider-line.right {
+    background: linear-gradient(90deg, var(--border-light), transparent);
+  }
+  .apply-divider-diamond {
+    width: 5px; height: 5px;
+    background: var(--gold);
+    transform: rotate(45deg);
+    opacity: 0.5;
+  }
+  .apply-submit-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: none;
+    border: 1px solid rgba(201,168,76,0.35);
+    color: var(--gold);
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    padding: 18px 48px;
+    cursor: none;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s ease;
+    margin-top: 48px;
+  }
+  .apply-submit-btn::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--gold-dim), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+  .apply-submit-btn:hover {
+    border-color: var(--gold);
+    box-shadow: 0 0 32px rgba(201,168,76,0.15);
+    transform: translateY(-2px);
+  }
+  .apply-submit-btn:hover::before { opacity: 1; }
+  .apply-submit-btn span { position: relative; z-index: 1; }
+  .apply-submit-btn .arrow {
+    position: relative; z-index: 1;
+    transition: transform 0.3s ease;
+  }
+  .apply-submit-btn:hover .arrow { transform: translateX(6px); }
+  .apply-success {
+    display: none;
+    text-align: center;
+    padding: 64px 32px;
+  }
+  .apply-success-icon {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    color: var(--gold);
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s ease forwards;
+  }
+  .apply-success-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 300;
+    margin-bottom: 12px;
+    animation: fadeUp 0.6s ease 0.1s both;
+  }
+  .apply-success-sub {
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    animation: fadeUp 0.6s ease 0.2s both;
+  }
+  @media (max-width: 768px) {
+    .apply-row { grid-template-columns: 1fr; gap: 0; }
+    .discord-corner { bottom: 20px; right: 16px; padding: 10px 14px; font-size: 8px; }
+  }
+
   /* SCROLLBAR */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
@@ -1185,6 +1411,7 @@
     <li><a href="#about">О Семье</a></li>
     <li><a href="#gallery">Галерея</a></li>
     <li><a href="#rules">Устав</a></li>
+    <li><a href="#apply">Заявка</a></li>
     <li><a href="#" id="bennettNavBtn" style="color:rgba(160,20,20,0.55);letter-spacing:3px;font-size:10px;">Bennett</a></li>
   </ul>
 </nav>
@@ -1482,8 +1709,88 @@
   </div>
 </div>
 
+<!-- APPLICATION SECTION -->
+<div id="apply" style="background: var(--bg); border-top: 1px solid var(--border);">
+  <div class="section">
+    <div class="section-header reveal">
+      <div class="section-number">05</div>
+      <div class="section-title-block">
+        <div class="section-eyebrow">Вступление в ряды</div>
+        <h2 class="section-title">Заявка в <em>Семью</em></h2>
+      </div>
+    </div>
+
+    <div class="apply-form-wrap reveal">
+      <div class="apply-intro">
+        Путь в семью открыт для достойных. Заполни анкету честно и подробно — каждое слово имеет значение. Совет рассматривает каждую заявку лично.
+      </div>
+
+      <div id="applyForm">
+        <div class="apply-field-group">
+          <div class="apply-field-label">Имя Фамилия</div>
+          <input class="apply-field-input" id="applyName" type="text" placeholder="Имя и фамилия персонажа" autocomplete="off">
+        </div>
+
+        <div class="apply-row">
+          <div class="apply-field-group">
+            <div class="apply-field-label">Сколько вам лет</div>
+            <input class="apply-field-input" id="applyAge" type="text" placeholder="Ваш возраст" autocomplete="off">
+          </div>
+          <div class="apply-field-group">
+            <div class="apply-field-label">Готовы пройти обзвон?</div>
+            <input class="apply-field-input" id="applyCall" type="text" placeholder="Да / Нет" autocomplete="off">
+          </div>
+        </div>
+
+        <div class="apply-divider">
+          <div class="apply-divider-line"></div>
+          <div class="apply-divider-diamond"></div>
+          <div class="apply-divider-line right"></div>
+        </div>
+
+        <div class="apply-field-group">
+          <div class="apply-field-label">Ваш опыт в игре</div>
+          <textarea class="apply-field-textarea" id="applyExp" placeholder="Расскажи об опыте в GTA RP — сколько времени в игре, что умеешь..."></textarea>
+        </div>
+
+        <div class="apply-field-group">
+          <div class="apply-field-label">Ваши должности</div>
+          <textarea class="apply-field-textarea" id="applyPositions" placeholder="Перечисли свои должности во фракциях..."></textarea>
+        </div>
+
+        <div class="apply-field-group">
+          <div class="apply-field-label">Почему хотите к нам</div>
+          <textarea class="apply-field-textarea" id="applyWhy" placeholder="Что привлекло тебя именно в семью Forever? Что ты ищешь здесь?"></textarea>
+        </div>
+
+        <div class="apply-field-group">
+          <div class="apply-field-label">Расскажите о себе</div>
+          <textarea class="apply-field-textarea tall" id="applyAbout" placeholder="Кто ты как человек? Характер, ценности, чем живёшь..."></textarea>
+        </div>
+
+        <button class="apply-submit-btn" id="applySubmitBtn">
+          <span>Отправить заявку</span>
+          <span class="arrow">→</span>
+        </button>
+      </div>
+
+      <div class="apply-success" id="applySuccess">
+        <div class="apply-success-icon">✦</div>
+        <div class="apply-success-title">Заявка принята</div>
+        <div class="apply-success-sub">Совет рассмотрит её и свяжется с тобой</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DISCORD CORNER BUTTON -->
+<a href="https://discord.gg/UbRySQPAJk" target="_blank" rel="noopener" class="discord-corner" id="discordBtn">
+  <span>Discord</span>
+  <div class="discord-corner-pulse"></div>
+</a>
+
 <footer>
-  <div class="footer-logo"><span>×</span> Forever <span>×</span> 
+  <div class="footer-logo"><span>×</span> Forever <span>×</span></div>
   <div class="footer-sub">Los Santos Family · Gta 5 RP</div>
   <div class="footer-divider"></div>
   <div class="footer-copy">© 2026 Forever Family. All rights reserved.</div>
@@ -2040,6 +2347,69 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     if (target) target.scrollIntoView({ behavior: 'smooth' });
   });
 });
+
+// APPLY FORM
+const applyBtn = document.getElementById('applySubmitBtn');
+if (applyBtn) {
+  applyBtn.addEventListener('click', async () => {
+    const name      = document.getElementById('applyName').value.trim();
+    const age       = document.getElementById('applyAge').value.trim();
+    const call      = document.getElementById('applyCall').value.trim();
+    const exp       = document.getElementById('applyExp').value.trim();
+    const positions = document.getElementById('applyPositions').value.trim();
+    const why       = document.getElementById('applyWhy').value.trim();
+    const about     = document.getElementById('applyAbout').value.trim();
+
+    const fields = [
+      ['applyName', name], ['applyAge', age], ['applyCall', call],
+      ['applyExp', exp], ['applyPositions', positions],
+      ['applyWhy', why], ['applyAbout', about]
+    ];
+
+    let hasEmpty = false;
+    fields.forEach(([id, val]) => {
+      if (!val) {
+        hasEmpty = true;
+        const el = document.getElementById(id);
+        el.style.borderColor = 'rgba(180,60,60,0.6)';
+        setTimeout(() => { el.style.borderColor = ''; }, 1500);
+      }
+    });
+    if (hasEmpty) return;
+
+    const btn = document.getElementById('applySubmitBtn');
+    btn.style.opacity = '0.5';
+    btn.style.pointerEvents = 'none';
+    btn.querySelector('span').textContent = 'Отправка...';
+
+    try {
+      await fetch('http://localhost:3000/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, age, call, experience: exp, positions, why, about })
+      });
+    } catch(e) {
+      // Если бот не отвечает — всё равно показываем успех
+      console.warn('Bot unreachable:', e);
+    }
+
+    document.getElementById('applyForm').style.opacity = '0';
+    document.getElementById('applyForm').style.transform = 'translateY(16px)';
+    document.getElementById('applyForm').style.transition = 'all 0.4s ease';
+    setTimeout(() => {
+      document.getElementById('applyForm').style.display = 'none';
+      const succ = document.getElementById('applySuccess');
+      succ.style.display = 'block';
+    }, 400);
+  });
+}
+
+// Discord cursor hover
+const discordBtn = document.getElementById('discordBtn');
+if (discordBtn) {
+  discordBtn.addEventListener('mouseenter', () => document.getElementById('cursorRing').classList.add('hover'));
+  discordBtn.addEventListener('mouseleave', () => document.getElementById('cursorRing').classList.remove('hover'));
+}
 
 // PARTICLES
 const pContainer = document.getElementById('particles');
