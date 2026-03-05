@@ -464,8 +464,13 @@
     font-size: 28px;
     font-weight: 300;
     color: var(--gold);
+    overflow: hidden;
   }
-
+  .card-avatar img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; border-radius: 50%;
+  }
   .person-card:hover .card-avatar { border-color: rgba(201,168,76,0.4); }
 
   .card-name {
@@ -715,6 +720,13 @@
     font-size: 40px;
     color: var(--gold);
     margin-bottom: 24px;
+    overflow: hidden;
+    position: relative;
+  }
+  .modal-avatar img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; border-radius: 50%;
   }
 
   .modal-name {
@@ -1006,6 +1018,100 @@
     100% { transform: translateY(-10vh) translateX(40px); opacity: 0; }
   }
 
+
+  /* ── GALLERY ── */
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 2px;
+    max-width: 960px;
+    margin: 0 auto;
+  }
+  .gallery-item {
+    position: relative; overflow: hidden;
+    aspect-ratio: 4/3;
+    background: var(--card);
+    border: 1px solid var(--border);
+    cursor: none;
+  }
+  .gallery-item img {
+    width: 100%; height: 100%;
+    object-fit: cover; display: block;
+    transition: transform 0.6s cubic-bezier(0.16,1,0.3,1), filter 0.4s ease;
+    filter: brightness(0.72) saturate(0.85);
+  }
+  .gallery-item:hover img { transform: scale(1.06); filter: brightness(0.92) saturate(1); }
+  .gallery-item::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 55%);
+    pointer-events: none;
+  }
+  .gallery-item-line {
+    position: absolute; top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transform: scaleX(0); transition: transform 0.4s ease; z-index: 2;
+  }
+  .gallery-item:hover .gallery-item-line { transform: scaleX(1); }
+  .gallery-item-label {
+    position: absolute; bottom: 0; left: 0; right: 0; z-index: 2;
+    padding: 16px 18px 14px;
+    transform: translateY(5px); transition: transform 0.3s ease;
+  }
+  .gallery-item:hover .gallery-item-label { transform: translateY(0); }
+  .gallery-item-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px; font-weight: 400;
+    color: var(--white); margin-bottom: 3px; line-height: 1.1;
+  }
+  .gallery-item-sub {
+    font-size: 9px; letter-spacing: 2px;
+    text-transform: uppercase; color: var(--gold);
+  }
+
+  /* ── LIGHTBOX ── */
+  .lightbox {
+    position: fixed; inset: 0;
+    background: rgba(0,0,0,0.93);
+    z-index: 5000;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.3s ease;
+    backdrop-filter: blur(14px);
+    padding: 24px;
+  }
+  .lightbox.active { opacity: 1; pointer-events: all; }
+  .lightbox img {
+    max-width: 88vw; max-height: 84vh;
+    object-fit: contain;
+    border: 1px solid var(--border-light);
+    transform: scale(0.95);
+    transition: transform 0.35s cubic-bezier(0.16,1,0.3,1);
+  }
+  .lightbox.active img { transform: scale(1); }
+  .lightbox-close {
+    position: absolute; top: 24px; right: 24px;
+    width: 44px; height: 44px;
+    border: 1px solid var(--border-light);
+    background: none; color: var(--white-dim); font-size: 18px;
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s ease;
+  }
+  .lightbox-close:hover { border-color: var(--gold); color: var(--gold); }
+  .lightbox-caption {
+    position: absolute; bottom: 28px;
+    left: 50%; transform: translateX(-50%);
+    text-align: center; white-space: nowrap;
+  }
+  .lightbox-caption-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px; font-weight: 300; color: var(--white); margin-bottom: 4px;
+  }
+  .lightbox-caption-sub {
+    font-size: 9px; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--gold);
+  }
+
   /* SCROLLBAR */
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
@@ -1077,6 +1183,7 @@
     <li><a href="#home" class="active">Главная</a></li>
     <li><a href="#leadership">Руководство</a></li>
     <li><a href="#about">О Семье</a></li>
+    <li><a href="#gallery">Галерея</a></li>
     <li><a href="#rules">Устав</a></li>
     <li><a href="#" id="bennettNavBtn" style="color:rgba(160,20,20,0.55);letter-spacing:3px;font-size:10px;">Bennett</a></li>
   </ul>
@@ -1351,6 +1458,30 @@
 </div>
 
 <!-- FOOTER -->
+<!-- GALLERY SECTION -->
+<div id="gallery" style="background: var(--bg2); border-top: 1px solid var(--border);">
+  <div class="section">
+    <div class="section-header reveal">
+      <div class="section-number">04</div>
+      <div class="section-title-block">
+        <div class="section-eyebrow">Галерея</div>
+        <h2 class="section-title">Фото <em>Семьи</em></h2>
+      </div>
+    </div>
+    <div class="gallery-grid" id="galleryGrid"></div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" id="lightboxClose">✕</button>
+  <img id="lightboxImg" src="" alt="">
+  <div class="lightbox-caption">
+    <div class="lightbox-caption-name" id="lightboxName"></div>
+    <div class="lightbox-caption-sub" id="lightboxSub"></div>
+  </div>
+</div>
+
 <footer>
   <div class="footer-logo"><span>×</span> Forever <span>×</span> 
   <div class="footer-sub">Los Santos Family · Gta 5 RP</div>
@@ -1382,6 +1513,7 @@ const members = [
     rank: "Высшее звено",
     tier: "top",
     initial: "K",
+    avatar: "",
     preview: "Управляющий веткой Forever",
     bio: "Kai Forever — это человек, которого редко увидишь в центре громких разговоров. Он не любит лишнего внимания и никогда не стремился выглядеть сильнее, чем он есть. Но внутри семьи его имя знают все, потому что за ним стоит главное — доверие.\n\nKai — один из тех людей, на которых держатся сообщества. Не из-за громких слов, а из-за поступков. Он никогда не строил из себя лидера, но со временем люди сами начали смотреть на него как на того, кто в нужные моменты рядом и никогда не подводит.\n\nДля Kai всё всегда было просто: если человек стал частью семьи — значит за него нужно стоять. Без условий. Без расчёта. До конца.\n\nKai не пришёл в систему как руководитель. Он прошёл тот же путь, что и многие другие: общение, поддержка, участие в жизни сообщества. Со временем стало понятно, что Kai — это человек, который держит людей вместе. Он не давит авторитетом и не управляет страхом. Его сила в другом — в умении оставаться честным, спокойным и справедливым даже в сложных ситуациях.\n\nЕсть одна черта, которая делает Kai тем, кем он является: он никогда не бросает своих людей. Если у кого-то из семьи проблемы — Kai будет рядом. Kai не пытается казаться жёстким. Но те, кто знает его хорошо, понимают: если кто-то тронет его семью — он сделает всё, чтобы это не осталось без ответа.",
     duties: ["Принимает окончательные решения по всем вопросам семьи", "Утверждает новых членов и присваивает ранги", "Ведёт переговоры с главами других организаций", "Определяет стратегическое направление семьи"],
@@ -1430,6 +1562,7 @@ const members = [
     rank: "Высшее звено",
     tier: "top",
     initial: "C",
+    avatar: "",
     preview: "Идейный вдохновитель и управляющий ветками Forever и Bennett",
     bio: "Conrad Bennett — фигура, вокруг которой формировалась вся система. Для многих он не просто лидер или управляющий — он символ силы, воли и ответственности. Человек, который способен не только придумать идею, но и встать впереди, когда этой идее угрожает опасность.\n\nЕго путь начался не как у обычного руководителя. Conrad никогда не стремился к власти ради самой власти. Его главной целью было создать сообщество, которое будет держаться на доверии, верности и взаимной защите. Именно из этой идеи со временем появилась система Forever и Bennett.\n\nНо то, что выделяет Conrad среди других — это не только его стратегический ум. Это его характер. Он известен как человек, который никогда не отступает, когда дело касается его людей. Для него семья — не просто слово. Это ответственность. И если возникает угроза, Conrad становится тем, кто выходит вперёд.\n\nМногие в сообществе говорят о нём почти как о легенде. Не потому что он пытается казаться сильным, а потому что он действительно доказал свою силу делом. Есть негласное правило: если ты стоишь за Conrad-ом — он будет стоять за тебя. Его главная цель — чтобы каждый участник Forever чувствовал, что он часть чего-то большего.",
     duties: ["Управляет внутренней структурой семьи", "Обеспечивает соблюдение устава всеми членами", "Координирует работу заместителей", "Разрешает конфликты внутри семьи"],
@@ -1440,7 +1573,74 @@ const members = [
     ],
     tags: ["Президент", "Легенда", "Bennett", "Лидер"],
     quote: "Conrad не ищет войну. Но если она начинается — он заканчивает её.",
-    positions: []
+    positions: [
+      { pos: "Председатель Верховного суда", frac: "GOV",   name: "Very Forever", server: "Unknown" },
+      { pos: "Генеральный Прокурор",         frac: "GOV",   name: "Very Forever", server: "Unknown" },
+      { pos: "Генеральный Прокурор",         frac: "GOV",   name: "Very Forever", server: "Unknown" },
+      { pos: "ВрИО Director",                frac: "FIB",   name: "Very Forever", server: "Unknown" },
+      { pos: "ВрИО General",                 frac: "SANG",  name: "Very Forever", server: "Unknown" },
+      { pos: "Верховный судья",              frac: "GOV",   name: "Very Forever", server: "Unknown" },
+      { pos: "Верховный судья",              frac: "GOV",   name: "Very Forever", server: "Unknown" },
+      { pos: "Верховный судья",              frac: "GOV",   name: "Very Forever", server: "Unknown" },
+      { pos: "Председатель Окружного суда",  frac: "GOV",   name: "Very Forever", server: "Unknown" },
+      { pos: "Заместитель Генерального Прокурора", frac: "GOV", name: "Very Forever", server: "Unknown" },
+      { pos: "Заместитель Генерального Прокурора", frac: "GOV", name: "Very Forever", server: "Unknown" },
+      { pos: "Заместитель Генерального Прокурора", frac: "GOV", name: "Very Forever", server: "Unknown" },
+      { pos: "Заместитель Министра Национальной безопасности", frac: "GOV", name: "Very Forever", server: "Unknown" },
+      { pos: "Заместитель Министра Национальной безопасности", frac: "GOV", name: "Very Forever", server: "Unknown" },
+      { pos: "Deputy Director",  frac: "FIB",   name: "Very Forever", server: "Unknown" },
+      { pos: "Deputy Director",  frac: "FIB",   name: "Very Forever", server: "Unknown" },
+      { pos: "Deputy Chief",     frac: "LSPD",  name: "Very Forever", server: "Unknown" },
+      { pos: "Deputy Chief",     frac: "LSPD",  name: "Very Forever", server: "Unknown" },
+      { pos: "Deputy Chief",     frac: "LSPD",  name: "Very Forever", server: "Unknown" },
+      { pos: "Deputy Chief",     frac: "LSPD",  name: "Very Forever", server: "Unknown" },
+      { pos: "Deputy General",   frac: "SANG",  name: "Very Forever", server: "Unknown" },
+      { pos: "Deputy Warden",    frac: "SASPA", name: "Very Forever", server: "Unknown" },
+      { pos: "Director USSS",        frac: "GOV",   name: "Very Forever", server: "Unknown" },
+      { pos: "Deputy Director USSS", frac: "GOV",   name: "Very Forever", server: "Unknown" },
+      { pos: "Deputy Director USSS", frac: "GOV",   name: "Very Forever", server: "Unknown" },
+      { pos: "Senior Sheriff", frac: "LSCSD", name: "Very Forever", server: "Unknown" },
+      { pos: "Curator DFD", frac: "FIB",  name: "Very Forever", server: "Unknown" },
+      { pos: "Curator DFD", frac: "FIB",  name: "Very Forever", server: "Unknown" },
+      { pos: "Curator DFD", frac: "FIB",  name: "Very Forever", server: "Unknown" },
+      { pos: "Curator CID", frac: "FIB",  name: "Very Forever", server: "Unknown" },
+      { pos: "Curator ID",  frac: "FIB",  name: "Very Forever", server: "Unknown" },
+      { pos: "Curator OPR", frac: "FIB",  name: "Very Forever", server: "Unknown" },
+      { pos: "Curator SSD",  frac: "SANG", name: "Very Forever", server: "Unknown" },
+      { pos: "Curator SWAT", frac: "LSPD", name: "Very Forever", server: "Unknown" },
+      { pos: "Curator IAD",  frac: "LSPD", name: "Very Forever", server: "Unknown" },
+      { pos: "Curator SPD",  frac: "LSCSD",name: "Very Forever", server: "Unknown" },
+      { pos: "Assistant Director", frac: "FIB", name: "Very Forever", server: "Unknown" },
+      { pos: "Assistant Director", frac: "FIB", name: "Very Forever", server: "Unknown" },
+      { pos: "Assistant Director", frac: "FIB", name: "Very Forever", server: "Unknown" },
+      { pos: "Assistant Director", frac: "FIB", name: "Very Forever", server: "Unknown" },
+      { pos: "Assistant Director", frac: "FIB", name: "Very Forever", server: "Unknown" },
+      { pos: "Assistant Director", frac: "FIB", name: "Very Forever", server: "Unknown" },
+      { pos: "Assistant Director", frac: "FIB", name: "Very Forever", server: "Unknown" },
+      { pos: "Adjutant",       frac: "SANG", name: "Very Forever", server: "Unknown" },
+      { pos: "Advisor General",frac: "SANG", name: "Very Forever", server: "Unknown" },
+      { pos: "Advisor General",frac: "SANG", name: "Very Forever", server: "Unknown" },
+      { pos: "Assistant Chief", frac: "LSPD", name: "Very Forever", server: "Unknown" },
+      { pos: "Assistant Chief", frac: "LSPD", name: "Very Forever", server: "Unknown" },
+      { pos: "Assistant Sheriff", frac: "LSSD", name: "Very Forever", server: "Unknown" },
+      { pos: "Assistant Sheriff", frac: "LSSD", name: "Very Forever", server: "Unknown" },
+      { pos: "Assistant Sheriff", frac: "LSSD", name: "Very Forever", server: "Unknown" },
+      { pos: "Assistant Sheriff", frac: "LSSD", name: "Very Forever", server: "Unknown" },
+      { pos: "Head CID", frac: "FIB", name: "Very Forever", server: "Unknown" },
+      { pos: "Head OPR", frac: "FIB", name: "Very Forever", server: "Unknown" },
+      { pos: "Head OPR", frac: "FIB", name: "Very Forever", server: "Unknown" },
+      { pos: "Head HRB", frac: "FIB", name: "Very Forever", server: "Unknown" },
+      { pos: "Head DFD", frac: "FIB", name: "Very Forever", server: "Unknown" },
+      { pos: "Commander MM",  frac: "SANG", name: "Very Forever", server: "Unknown" },
+      { pos: "Commander MP",  frac: "SANG", name: "Very Forever", server: "Unknown" },
+      { pos: "Commander MDE", frac: "SANG", name: "Very Forever", server: "Unknown" },
+      { pos: "Head DC",  frac: "LSCSD", name: "Very Forever", server: "Unknown" },
+      { pos: "Head SEB", frac: "LSCSD", name: "Very Forever", server: "Unknown" },
+      { pos: "Head SWAT", frac: "LSPD", name: "Very Forever", server: "Unknown" },
+      { pos: "Head SWAT", frac: "LSPD", name: "Very Forever", server: "Unknown" },
+      { pos: "Head AD",  frac: "SASPA", name: "Very Forever", server: "Unknown" },
+      { pos: "Head SOG", frac: "GOV",   name: "Very Forever", server: "Unknown" }
+    ]
   },
   {
     id: 3,
@@ -1449,6 +1649,7 @@ const members = [
     rank: "Старший вице-президент",
     tier: "mid",
     initial: "L",
+    avatar: "Lesya.jpg",
     preview: "Заместитель и правая рука управляющего веткой Forever. ",
     bio: "Lesya Forever — спокойный, рассудительный и коммуникабельный человек. Она умеет находить подход к людям и всегда старается решать любые вопросы с холодной головой и здравым смыслом. Несмотря на мягкий характер, Lesya требовательна к себе и окружающим, особенно когда дело касается работы и ответственности. Работая в государственных структурах, она привыкла к дисциплине, порядку и принятию взвешенных решений. Lesya внимательно относится к деталям, умеет анализировать ситуацию и всегда стремится действовать справедливо. За годы службы она получила хорошую подготовку и опыт работы в стрессовых ситуациях. Благодаря навыкам тактического мышления и самообороны, Lesya способна действовать эффективно даже против нескольких противников, если ситуация того требует. Её главные качества — ум, сдержанность, умение договариваться и сохранять контроль даже в сложных ситуациях.",
     duties: ["Замещает Донов при необходимости", "Координирует оперативные задачи", "Контролирует исполнение приказов", "Докладывает Донам о текущей ситуации"],
@@ -1472,18 +1673,46 @@ const members = [
     role: "Заместитель · Место 2",
     rank: "Вице-президент · Шериф",
     tier: "mid",
-    initial: "?",
-    preview: "Место заместителя свободно. Достоин ли ты его занять?",
+    initial: "C",
+    avatar: "",
+    preview: "Главный следащий в ветке Forever.",
     bio: "Позиция заместителя открыта для достойного члена семьи, доказавшего свою преданность и профессионализм.",
     duties: ["Замещает Донов при необходимости", "Координирует оперативные задачи", "Контролирует исполнение приказов", "Докладывает Донам о текущей ситуации"],
     stats: [
-      { label: "Авторитет", val: 0 },
-      { label: "Опыт", val: 0 },
-      { label: "Преданность", val: 0 }
+      { label: "Авторитет", val: 0.83 },
+      { label: "Опыт", val: 0.87 },
+      { label: "Преданность", val: 1.0 }
     ],
-    tags: ["Вакансия", "Заместитель"],
+    tags: ["Шериф", "Заместитель"],
     quote: "Цитата...",
-    positions: []
+    positions: [
+      { pos: "Dep.General",      frac: "ARMY", name: "Shitsu Ren",      server: "Rockford" },
+      { pos: "Dep.General",      frac: "ARMY", name: "Shitsu Ren",      server: "Hawick" },
+      { pos: "Adviser",          frac: "ARMY", name: "Shitsu Ren",      server: "Hawick" },
+      { pos: "Adviser",          frac: "ARMY", name: "Shitsu Ren",      server: "Rockford" },
+      { pos: "Cur.DIV",          frac: "ARMY", name: "Shitsu Ren",      server: "Hawick" },
+      { pos: "Cur.MA",           frac: "ARMY", name: "Shitsu Ren",      server: "Hawick" },
+      { pos: "Com.MP",           frac: "ARMY", name: "Shitsu Ren",      server: "Hawick" },
+      { pos: "Com.DIV",          frac: "ARMY", name: "Shitsu Ren",      server: "Hawick" },
+      { pos: "Com.MA",           frac: "ARMY", name: "Shitsu Ren",      server: "Rockford" },
+      { pos: "ЗМТ",              frac: "GOV",  name: "Yuriy Fletcher",  server: "Hawick" },
+      { pos: "Adviser Governor", frac: "GOV",  name: "Shitsu Ren",      server: "Hawick" },
+      { pos: "Dir.ДСВ",          frac: "GOV",  name: "Yuriy Fletcher",  server: "Hawick" },
+      { pos: "Dir.USSS",         frac: "GOV",  name: "Yuriy Fletcher",  server: "Hawick" },
+      { pos: "Head.CAT",         frac: "FIB",  name: "Shitsu Ren",      server: "Murrieta" },
+      { pos: "Head.ISB",         frac: "FIB",  name: "Caleb Forever",   server: "Murrieta" },
+      { pos: "Undersheriff",     frac: "LSSD", name: "Shitsu Ren",      server: "Murrieta" },
+      { pos: "Dep.Chief",        frac: "LSPD", name: "Shitsu Ren",      server: "Rockford" },
+      { pos: "Ass.Sheriff",      frac: "LSSD", name: "Shitsu Ren",      server: "Murrieta" },
+      { pos: "Cur.DC",           frac: "LSPD", name: "Shitsu Ren",      server: "Hawick" },
+      { pos: "Head.PAI",         frac: "LSPD", name: "Shitsu Ren",      server: "Hawick" },
+      { pos: "Head.DC",          frac: "LSPD", name: "Shitsu Ren",      server: "Hawick" },
+      { pos: "Head.DB",          frac: "LSPD", name: "Shitsu Ren",      server: "Rockford" },
+      { pos: "Deputy Warden",    frac: "SASP", name: "Yurii Mamura",    server: "Rockford" },
+      { pos: "Assistant Warden", frac: "SASP", name: "Yurii Sun",       server: "Rockford" },
+      { pos: "Head.PRD",         frac: "SASP", name: "Yurii Sun",       server: "Rockford" },
+      { pos: "Head.PAI",         frac: "LSPD", name: "Shitsu Ren",      server: "Hawick" }
+]
   },
   {
     id: 5,
@@ -1491,7 +1720,8 @@ const members = [
     role: "Заместитель · Место 3",
     rank: "Заместители",
     tier: "mid",
-    initial: "?",
+    initial: "C",
+    avatar: "",
     preview: "Место заместителя свободно. Достоин ли ты его занять?",
     bio: "Позиция заместителя открыта для достойного члена семьи, доказавшего свою преданность и профессионализм.",
     duties: ["Замещает Донов при необходимости", "Координирует оперативные задачи", "Контролирует исполнение приказов", "Докладывает Донам о текущей ситуации"],
@@ -1510,18 +1740,38 @@ const members = [
     role: "Заместитель · Место 4",
     rank: "Заместители",
     tier: "mid",
-    initial: "?",
-    preview: "Место заместителя свободно. Достоин ли ты его занять?",
-    bio: "Позиция заместителя открыта для достойного члена семьи, доказавшего свою преданность и профессионализм.",
+    initial: "R",
+    avatar: "",
+    preview: "Элитный состав Bannett",
+    bio: "---",
     duties: ["Замещает Донов при необходимости", "Координирует оперативные задачи", "Контролирует исполнение приказов", "Докладывает Донам о текущей ситуации"],
     stats: [
-      { label: "Авторитет", val: 0 },
-      { label: "Опыт", val: 0 },
-      { label: "Преданность", val: 0 }
+      { label: "Авторитет", val: 0.8 },
+      { label: "Опыт", val: 0.9 },
+      { label: "Преданность", val: 1.0 }
     ],
-    tags: ["Вакансия", "Заместитель"],
+    tags: ["Bennet", "Elite"],
     quote: "«Деньги не меняют человека — они лишь показывают, кем он был на самом деле.»",
-    positions: []
+    positions: [
+      { pos: "Head.CID",      frac: "FIB",  name: "Unknown", server: "Unknown" },
+      { pos: "Adjutant",      frac: "ARMY", name: "Unknown", server: "Unknown" },
+      { pos: "Dir.USSS",      frac: "GOV",  name: "Unknown", server: "Unknown" },
+      { pos: "D.Head DIS",    frac: "FIB",  name: "Unknown", server: "Unknown" },
+      { pos: "ЗМНБ",          frac: "GOV",  name: "Unknown", server: "Unknown" },
+      { pos: "Cur.MA",        frac: "ARMY", name: "Unknown", server: "Unknown" },
+      { pos: "Head PB",       frac: "LSSD", name: "Unknown", server: "Unknown" },
+      { pos: "Советник ГП",   frac: "GOV",  name: "Unknown", server: "Unknown" },
+      { pos: "Dep.Warden",    frac: "SASPA",name: "Unknown", server: "Unknown" },
+      { pos: "Head.DFD",      frac: "FIB",  name: "Unknown", server: "Unknown" },
+      { pos: "Adv.Gen",       frac: "ARMY", name: "Unknown", server: "Unknown" },
+      { pos: "D.Head FPB",    frac: "FIB",  name: "Unknown", server: "Unknown" },
+      { pos: "ПОС",           frac: "GOV",  name: "Unknown", server: "Unknown" },
+      { pos: "Dep.Dir USSS",  frac: "GOV",  name: "Unknown", server: "Unknown" },
+      { pos: "Dep.Gen",       frac: "ARMY", name: "Unknown", server: "Unknown" },
+      { pos: "ЗГП",           frac: "GOV",  name: "Unknown", server: "Unknown" },
+      { pos: "Ass.Dir",       frac: "FIB",  name: "Unknown", server: "Unknown" },
+      { pos: "D.Head SPD",    frac: "LSSD", name: "Unknown", server: "Unknown" }
+    ]
   },
   {
     id: 7,
@@ -1529,16 +1779,17 @@ const members = [
     role: "Заместитель · Место 5",
     rank: "Заместители",
     tier: "mid",
-    initial: "?",
-    preview: "Место заместителя свободно. Достоин ли ты его занять?",
-    bio: "Позиция заместителя открыта для достойного члена семьи, доказавшего свою преданность и профессионализм.",
+    initial: "R",
+    avatar: "",
+    preview: "Главный за набор людей.",
+    bio: "---",
     duties: ["Замещает Донов при необходимости", "Координирует оперативные задачи", "Контролирует исполнение приказов", "Докладывает Донам о текущей ситуации"],
     stats: [
-      { label: "Авторитет", val: 0 },
-      { label: "Опыт", val: 0 },
-      { label: "Преданность", val: 0 }
+      { label: "Авторитет", val: 0.63 },
+      { label: "Опыт", val: 0.71 },
+      { label: "Преданность", val: 0.85 }
     ],
-    tags: ["Вакансия", "Заместитель"],
+    tags: ["Заместитель Шерифа", "Заместитель"],
     quote: "Цитата...",
     positions: []
   }
@@ -1559,7 +1810,7 @@ function renderCard(member) {
   card.className = 'person-card reveal';
   card.innerHTML = `
     <div class="card-rank">${member.rank}</div>
-    <div class="card-avatar">${member.initial}</div>
+    <div class="card-avatar">${member.avatar ? `<img src="/images/${member.avatar}" alt="${member.name}" onerror="this.remove()">` : member.initial}</div>
     <div class="card-name">${member.name}</div>
     <div class="card-role">${member.role}</div>
     <div class="card-divider"></div>
@@ -1623,7 +1874,8 @@ document.querySelectorAll('.tab-btn').forEach(btn => {
 // MODAL
 function openModal(member) {
   document.getElementById('mRank').textContent = member.rank;
-  document.getElementById('mAvatar').textContent = member.initial;
+  const mAv = document.getElementById('mAvatar');
+  mAv.innerHTML = member.avatar ? `<img src="/images/${member.avatar}" alt="${member.name}" onerror="this.remove()">${member.initial}` : member.initial;
   document.getElementById('mName').textContent = member.name;
   document.getElementById('mRole').textContent = member.role;
 
@@ -1816,6 +2068,46 @@ document.getElementById('bennettBack').addEventListener('click', () => {
   bennettPage.style.display = 'none';
   document.body.style.overflow = '';
 });
+
+// ── GALLERY ────────────────────────────────────────────────────────
+// Добавляй: { name: "Подпись", sub: "Дата", file: "фото.jpg" }
+const galleryItems = [
+  // { name: "Название", sub: "2026", file: "photo.jpg" },
+];
+
+const galleryGrid = document.getElementById('galleryGrid');
+galleryItems.forEach(p => {
+  const item = document.createElement('div');
+  item.className = 'gallery-item reveal';
+  item.innerHTML = `
+    <div class="gallery-item-line"></div>
+    <img src="/images/${p.file}" alt="${p.name}" loading="lazy"
+      onerror="this.closest('.gallery-item').style.display='none'">
+    <div class="gallery-item-label">
+      <div class="gallery-item-name">${p.name}</div>
+      <div class="gallery-item-sub">${p.sub}</div>
+    </div>
+  `;
+  item.addEventListener('click', () => {
+    document.getElementById('lightboxImg').src = '/images/' + p.file;
+    document.getElementById('lightboxName').textContent = p.name;
+    document.getElementById('lightboxSub').textContent = p.sub;
+    document.getElementById('lightbox').classList.add('active');
+    document.body.style.overflow = 'hidden';
+  });
+  galleryGrid.appendChild(item);
+  observer.observe(item);
+});
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('active');
+  document.body.style.overflow = '';
+}
+document.getElementById('lightboxClose').addEventListener('click', closeLightbox);
+document.getElementById('lightbox').addEventListener('click', e => {
+  if (e.target === document.getElementById('lightbox')) closeLightbox();
+});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
 </script>
 </body>
